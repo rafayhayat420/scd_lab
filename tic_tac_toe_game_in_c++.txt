@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -26,7 +25,7 @@ void playerMove(char player) {
     int row = (move - 1) / 3;
     int col = (move - 1) % 3;
 
-    if (board[row][col]!= 'X' && board[row][col]!= 'O') {
+    if (board[row][col] != 'X' && board[row][col] != 'O') {
         board[row][col] = player;
     } else {
         cout << "Invalid move, try again.\n";
@@ -63,7 +62,7 @@ bool checkWin(char player) {
 bool checkDraw() {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            if (board[i][j]!= 'X' && board[i][j]!= 'O') {
+            if (board[i][j] != 'X' && board[i][j] != 'O') {
                 return false;
             }
         }
@@ -71,27 +70,42 @@ bool checkDraw() {
     return true;
 }
 
+// Function to reset the game board
+void resetBoard() {
+    board = {{'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'}};
+}
+
 int main() {
-    char currentPlayer = 'X';
+    char currentPlayer;
+    char playAgain;
 
-    while (true) {
-        drawBoard();
-        playerMove(currentPlayer);
+    do {
+        currentPlayer = 'X';
+        resetBoard();
 
-        if (checkWin(currentPlayer)) {
+        while (true) {
             drawBoard();
-            cout << "Player " << currentPlayer << " wins!\n";
-            break;
+            playerMove(currentPlayer);
+
+            if (checkWin(currentPlayer)) {
+                drawBoard();
+                cout << "Player " << currentPlayer << " wins!\n";
+                break;
+            }
+
+            if (checkDraw()) {
+                drawBoard();
+                cout << "It's a draw!\n";
+                break;
+            }
+
+            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
         }
 
-        if (checkDraw()) {
-            drawBoard();
-            cout << "It's a draw!\n";
-            break;
-        }
+        cout << "Do you want to play again? (y/n): ";
+        cin >> playAgain;
 
-        currentPlayer = (currentPlayer == 'X')? 'O' : 'X';
-    }
+    } while (playAgain == 'y');
 
     return 0;
 }
